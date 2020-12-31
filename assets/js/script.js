@@ -184,7 +184,7 @@ $("#task-form-modal").on("shown.bs.modal", function()
 });
 
 // save button in modal was clicked
-$("#task-form-modal .btn-primary").click(function() 
+$("#task-form-modal .btn-save").click(function() 
 {
   // get form values
   var taskText = $("#modalTaskDescription").val();
@@ -261,7 +261,30 @@ $(".card .list-group").sortable
     // update array on tasks object and save
     tasks[arrName] = tempArr;
     saveTasks();
+  },
+
+  activate: function()
+  {
+    $(this).addClass("dropover");
+    $(".bottom-trash").addClass("bottom-trash-drag");
+  },
+
+  deactivate: function()
+  {
+    $(this).removeClass("dropover");
+    $(".bottom-trash").removeClass("bottom-trash-drag");
+  },
+
+  over: function(event)
+  {
+    $(event.target).addClass("dropover-active");
+  },
+
+  out: function(event)
+  {
+    $(event.target).removeClass("dropover-active");
   }
+
 });
 
 $("#trash").droppable
@@ -270,8 +293,20 @@ $("#trash").droppable
   tolerance: "touch",
   drop: function(event, ui) 
   {
+    $(".bottom-trash").removeClass("bottom-trash-active");
     ui.draggable.remove();
   },
+
+  out:function()
+  {
+    $(".bottom-trash").removeClass("bottom-trash-active");
+  },
+
+  over:function()
+  {
+    $(".bottom-trash").addClass("bottom-trash-active");
+  }
+
 });
 
 $("#modalDueDate").datepicker(
@@ -310,7 +345,6 @@ setInterval(function ()
   $(".card .list-group-item").each(
     function(index, el) 
     {
-      console.log(index,el);
       auditTask(el);
     });
 }, (1000 * 60) * 30 );
